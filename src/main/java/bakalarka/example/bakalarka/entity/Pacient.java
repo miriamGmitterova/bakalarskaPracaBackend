@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import java.util.Set;
+
 import java.util.UUID;
 
 @Entity
@@ -25,14 +25,4 @@ public class Pacient {
     @ManyToOne
     @JoinColumn(name = "id_pouzivatela")
     private Pouzivatel pouzivatel;
-
-    @OneToMany(mappedBy = "pacient", cascade = CascadeType.ALL)
-    private Set<Hodnotenie> hodnotenia;
-
-
-    @OneToMany(mappedBy = "pacient", cascade = CascadeType.ALL)
-    private Set<TerminVysetrenia> terminVysetrenia;
-
-    @OneToMany(mappedBy = "pacient", cascade = CascadeType.ALL)
-    private Set<ZdravotnaKarta> zdravotnaKarta;
 }

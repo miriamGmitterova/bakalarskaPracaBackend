@@ -1,13 +1,15 @@
 package bakalarka.example.bakalarka.controllers;
 
-import bakalarka.example.bakalarka.entity.Lekar;
+
 import bakalarka.example.bakalarka.entity.Pacient;
-import bakalarka.example.bakalarka.requests.UlozLekaraRequest;
+
+
 import bakalarka.example.bakalarka.requests.UlozPacientaRequest;
-import bakalarka.example.bakalarka.services.LekarService;
+
 import bakalarka.example.bakalarka.services.PacientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.UUID;
 public class PacientController {
 
     private final PacientService pacientService;
+
 
     @PostMapping("/uloz")
     @ResponseStatus(HttpStatus.CREATED)
@@ -38,6 +41,7 @@ public class PacientController {
         return pacientService.getPacient(id);
     }
 
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void vymazPacienta(@PathVariable UUID id) {
@@ -49,4 +53,5 @@ public class PacientController {
     public void upravPacienta(@PathVariable UUID id, UlozPacientaRequest ulozPacientaRequest) {
         pacientService.upravPacienta(id, ulozPacientaRequest);
     }
+
 }

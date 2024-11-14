@@ -1,6 +1,5 @@
 package bakalarka.example.bakalarka.requests;
 
-import bakalarka.example.bakalarka.entity.Pacient;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -15,17 +14,12 @@ import java.util.UUID;
 @Validated
 public class UlozKartuRequest {
 
-    private UUID pacient;
-    private UUID lekar;
+    private UUID id_pouzivatela;
+    private UUID id_lekara;
 
     @NotNull
-    @JsonFormat(pattern = "dd.MM.yyyy HH:mm:ss")
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "UTC")
     private LocalDateTime zalozenie;
 
-    @JsonFormat(pattern = "dd.MM.yyyy HH:mm:ss")
-    private LocalDateTime odstranenie;
 
-    @NotNull
-    @JsonFormat(pattern = "dd.MM.yyyy HH:mm:ss")
-    private LocalDateTime poslednaPrehliadka;
 }

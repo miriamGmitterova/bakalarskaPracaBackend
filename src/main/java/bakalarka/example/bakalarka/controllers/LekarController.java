@@ -4,8 +4,9 @@ import bakalarka.example.bakalarka.entity.Lekar;
 import bakalarka.example.bakalarka.requests.UlozLekaraRequest;
 import bakalarka.example.bakalarka.services.LekarService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.http11.filters.IdentityInputFilter;
+
 import org.springframework.http.HttpStatus;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,6 +36,8 @@ public class LekarController {
     public Lekar getLekara(@PathVariable UUID id) {
         return lekarService.getLekar(id);
     }
+
+
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

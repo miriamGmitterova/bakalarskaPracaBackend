@@ -5,24 +5,30 @@ import bakalarka.example.bakalarka.repositories.PouzivatelRepository;
 import bakalarka.example.bakalarka.requests.AuthorizeRequest;
 import bakalarka.example.bakalarka.requests.UlozPouzivatelaRequest;
 import bakalarka.example.bakalarka.services.PouzivatelService;
+import bakalarka.example.bakalarka.services.UpozornenieService;
+import bakalarka.example.bakalarka.services.VysetreniaService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
 @SpringBootTest
 class VysetreniaApplicationTests {
-	@Autowired
-	PouzivatelService pouzivatelService;
+
+
+//	@Autowired
+//	PouzivatelService pouzivatelService;
 //	@Autowired
 //	PouzivatelRepository pouzivatelRepository;
-	@Test
-	void contextLoads() {
-		List<Pouzivatel> pouzivatels = pouzivatelService.getZoznam();
-		for (Pouzivatel pouzivatel : pouzivatels) {
-			System.out.println(pouzivatel.getMeno());
-		}
+//	@Test
+//	void contextLoads() {
+//		List<Pouzivatel> pouzivatels = pouzivatelService.getZoznam();
+//		for (Pouzivatel pouzivatel : pouzivatels) {
+//			System.out.println(pouzivatel.getMeno());
+//		}
 //		System.out.println(String.valueOf(pouzivatels));
 //		AuthorizeRequest authorizeRequest = new AuthorizeRequest();
 //
@@ -30,6 +36,6 @@ class VysetreniaApplicationTests {
 //		authorizeRequest.setPasswords("tester");
 //		System.out.println(String.valueOf(pouzivatelService.authorise(authorizeRequest)));
 
-	}
+//	}
 
 }

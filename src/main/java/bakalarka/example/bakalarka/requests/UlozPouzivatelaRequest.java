@@ -19,12 +19,11 @@ public class UlozPouzivatelaRequest {
     private String popisneCislo;
     private String mesto;
     private PouzivatelskeRole role;
-    private String foto;
 
-    // Additional fields for Pacient
+
     private String rodneCislo;
 
-    // Additional fields for Lekar
+
     private String specializacia;
     private TypLekara typLekara;
 }

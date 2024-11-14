@@ -4,28 +4,16 @@ import bakalarka.example.bakalarka.entity.Lekar;
 import bakalarka.example.bakalarka.entity.Pacient;
 import bakalarka.example.bakalarka.entity.Pouzivatel;
 import bakalarka.example.bakalarka.entity.enums.PouzivatelskeRole;
-import bakalarka.example.bakalarka.entity.enums.TypLekara;
 import bakalarka.example.bakalarka.repositories.LekarRepository;
 import bakalarka.example.bakalarka.repositories.PacientRepository;
 import bakalarka.example.bakalarka.repositories.PouzivatelRepository;
-import bakalarka.example.bakalarka.requests.AuthorizeRequest;
-import bakalarka.example.bakalarka.requests.UlozLekaraRequest;
-import bakalarka.example.bakalarka.requests.UlozPacientaRequest;
-import bakalarka.example.bakalarka.requests.UlozPouzivatelaRequest;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
+import bakalarka.example.bakalarka.requests.*;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Streamable;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import bakalarka.example.bakalarka.services.LekarService;
-import bakalarka.example.bakalarka.services.PacientService;
-
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.*;
@@ -57,11 +45,11 @@ public class PouzivatelService {
         pouzivatel.setUser_name(ulozPouzivatelaRequest.getUser_name());
         pouzivatel.setPassword(passwordEncoder.encode(ulozPouzivatelaRequest.getHeslo()));
         pouzivatel.setRole(ulozPouzivatelaRequest.getRole());
-        pouzivatel.setTel_cislo(ulozPouzivatelaRequest.getTelCislo());
+        pouzivatel.setTelCislo(ulozPouzivatelaRequest.getTelCislo());
         pouzivatel.setUlica(ulozPouzivatelaRequest.getUlica());
-        pouzivatel.setPopisne_cislo(ulozPouzivatelaRequest.getPopisneCislo());
+        pouzivatel.setPopisneCislo(ulozPouzivatelaRequest.getPopisneCislo());
         pouzivatel.setMesto(ulozPouzivatelaRequest.getMesto());
-        pouzivatel.setFoto(ulozPouzivatelaRequest.getFoto());
+
 
         // Save Pouzivatel
         Pouzivatel savedPouzivatel = pouzivatelRepository.save(pouzivatel);
@@ -84,31 +72,6 @@ public class PouzivatelService {
             throw new RuntimeException("Error saving user: " + e.getMessage());
         }
 
-//        boolean isUsernameAvailable = checkUsernameAvailability(ulozPouzivatelaRequest.getUser_name());
-//
-//        if (!isUsernameAvailable) {
-//            throw new ValidationException("Username is already taken");
-//        }
-
-//        kontrolaNovehoPouzivatela(ulozPouzivatelaRequest);
-//
-//
-//        Pouzivatel pouzivatel = new Pouzivatel();
-//        pouzivatel.setEmail(ulozPouzivatelaRequest.getEmail());
-//        pouzivatel.setPriezvisko(ulozPouzivatelaRequest.getPriezvisko());
-//        pouzivatel.setMeno(ulozPouzivatelaRequest.getMeno());
-//        pouzivatel.setUser_name(ulozPouzivatelaRequest.getUser_name());
-//        pouzivatel.setFoto(ulozPouzivatelaRequest.getFoto());
-//        pouzivatel.setTel_cislo(ulozPouzivatelaRequest.getTelCislo());
-//        pouzivatel.setUlica(ulozPouzivatelaRequest.getUlica());
-//        pouzivatel.setPopisne_cislo(ulozPouzivatelaRequest.getPopisneCislo());
-//        pouzivatel.setPsc(ulozPouzivatelaRequest.getPsc());
-//
-//        pouzivatel.setRole(ulozPouzivatelaRequest.getRole());
-//
-//        pouzivatel.setPassword(passwordEncoder.encode(ulozPouzivatelaRequest.getHeslo()));
-//
-//        pouzivatelRepository.save(pouzivatel);
 
     }
 
@@ -151,29 +114,49 @@ public class PouzivatelService {
         pouzivatelRepository.deleteById(id);
     }
 
-    public void upravPouzivatela(UUID id, UlozPouzivatelaRequest ulozPouzivatelaRequest) {
+    public void upravPouzivatela(UUID id, UpravPouzivatelaRequest upravPouzivatelaRequest) {
+
+        // Check if username already exists
+        boolean usernameExists = pouzivatelRepository.findAll().stream()
+                .anyMatch(pouzivatel -> pouzivatel.getUser_name().equals(upravPouzivatelaRequest.getUser_name()));
+
+        if (usernameExists) {
+            throw new ValidationException("User with the given username already exists");
+        }
 
         if (!pouzivatelRepository.existsById(id)) {
             throw new NoSuchElementException("Chyba: pouzivatel s danym ID neexistuje");
         }
 
-        Pouzivatel pouzivatel = pouzivatelRepository.findById(id).get();
+        Pouzivatel pouzivatel = pouzivatelRepository.findById(id).orElseThrow(() ->
+                new NoSuchElementException("Chyba: pouzivatel s danym ID neexistuje")
+        );
 
-        pouzivatel.setEmail(ulozPouzivatelaRequest.getEmail());
-        pouzivatel.setPriezvisko(ulozPouzivatelaRequest.getPriezvisko());
-        pouzivatel.setMeno(ulozPouzivatelaRequest.getMeno());
-        pouzivatel.setPassword(ulozPouzivatelaRequest.getHeslo());
-        pouzivatel.setUser_name(ulozPouzivatelaRequest.getUser_name());
+        // Debug output for UpravPouzivatelaRequest
+        System.out.println("Updating Pouzivatel with ID: " + pouzivatel.getId_pouzivatela());
+        System.out.println("User name: " + upravPouzivatelaRequest.getUser_name());
+        System.out.println("Tel. cislo: " + upravPouzivatelaRequest.getTelCislo());
+        System.out.println("Ulica: " + upravPouzivatelaRequest.getUlica());
+        System.out.println("Popisne cislo: " + upravPouzivatelaRequest.getPopisneCislo());
+        System.out.println("Mesto: " + upravPouzivatelaRequest.getMesto());
 
-        pouzivatel.setFoto(ulozPouzivatelaRequest.getFoto());
-        pouzivatel.setTel_cislo(ulozPouzivatelaRequest.getTelCislo());
-        pouzivatel.setUlica(ulozPouzivatelaRequest.getUlica());
-        pouzivatel.setPopisne_cislo(ulozPouzivatelaRequest.getPopisneCislo());
-        pouzivatel.setMesto(ulozPouzivatelaRequest.getMesto());
-        pouzivatel.setRole(ulozPouzivatelaRequest.getRole());
+        pouzivatel.setUser_name(upravPouzivatelaRequest.getUser_name());
+        pouzivatel.setTelCislo(upravPouzivatelaRequest.getTelCislo());
+        pouzivatel.setUlica(upravPouzivatelaRequest.getUlica());
 
+        // Debug output before setting new values
+        System.out.println("Old cislo value: " + pouzivatel.getPopisneCislo());
+        pouzivatel.setPopisneCislo(upravPouzivatelaRequest.getPopisneCislo());
+        System.out.println("New cislo value: " + pouzivatel.getPopisneCislo());
 
+        System.out.println("Old Mesto value: " + pouzivatel.getMesto());
+        pouzivatel.setMesto(upravPouzivatelaRequest.getMesto());
+        System.out.println("New Mesto value: " + pouzivatel.getMesto());
+
+        // Save the updated pouzivatel entity
         pouzivatelRepository.save(pouzivatel);
+
+
     }
 
     public List<Pouzivatel> getZoznam() {
@@ -182,42 +165,9 @@ public class PouzivatelService {
         return pouzivatels;
     }
 
-    private void kontrolaNovehoPouzivatela(UlozPouzivatelaRequest request) {
-        Boolean existujuciMail = pouzivatelRepository.findAll().stream().anyMatch(pouzivatel -> pouzivatel.getEmail().equals(request.getEmail()));
-
-        if (existujuciMail) {
-            throw new ValidationException("Pouzivatel s danym mailom uz existuje");
-        }
-
-
-        Boolean existujuceUsername = pouzivatelRepository.findAll().stream().anyMatch(pouzivatel -> pouzivatel.getUser_name().equals(request.getUser_name()));
-
-        if (existujuceUsername) {
-            throw new ValidationException("Pouzivatel s danym UserName uz existuje");
-        }
-
-    }
 
     public Pouzivatel authorise(AuthorizeRequest request) throws Exception {
 
-
-//        String username = request.getUser_name();
-//        String password = request.getPassword();
-//
-//        List<Pouzivatel> zoznamPouzivatelov = pouzivatelRepository.findAll();
-//
-//        for (Pouzivatel p : zoznamPouzivatelov) {
-//            if (p.getUser_name().equals(username)) {
-//                // Check if the password matches using PasswordEncoder
-//                if (passwordEncoder.matches(password, p.getPassword())) {
-//                    return p; // Return the user if both username and password match
-//                } else {
-//                    throw new IllegalArgumentException("Incorrect password for username: " + username);
-//                }
-//            }
-//        }
-//
-//        throw new NoSuchElementException("User not found with username: " + username);
         String username = request.getUser_name();
         String password = request.getPassword();
 
@@ -231,16 +181,8 @@ public class PouzivatelService {
         } else {
             throw new IllegalArgumentException("Incorrect password for username: " + username);
         }
+
+
     }
-
 }
-
-//        for (Pouzivatel p : zoznamPouzivatelov) {
-//            if (p.getUser_name().equals(username)) {
-//                return p;
-//            }
-//        }
-//
-//        throw new NoSuchElementException("User not found with username: " + username);
-//    }
 

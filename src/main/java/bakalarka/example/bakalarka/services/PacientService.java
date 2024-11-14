@@ -1,16 +1,14 @@
 package bakalarka.example.bakalarka.services;
 
-import bakalarka.example.bakalarka.entity.Lekar;
 import bakalarka.example.bakalarka.entity.Pacient;
-import bakalarka.example.bakalarka.entity.enums.TypLekara;
+
 import bakalarka.example.bakalarka.repositories.PacientRepository;
 import bakalarka.example.bakalarka.repositories.PouzivatelRepository;
-import bakalarka.example.bakalarka.requests.UlozLekaraRequest;
 import bakalarka.example.bakalarka.requests.UlozPacientaRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
+
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -66,4 +64,5 @@ public class PacientService {
 
         pacientRepository.save(pacient);
     }
+
 }
